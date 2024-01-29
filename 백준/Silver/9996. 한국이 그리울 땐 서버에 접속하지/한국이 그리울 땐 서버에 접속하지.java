@@ -4,29 +4,19 @@ import java.io.IOException;
 
 class Main {
     static int N;
-    static String pattern;
-    static String headPattern = "";
-    static String tailPattern = "";
+    static String[] pArr;
+    static String headPattern;
+    static String tailPattern;
     
     public static void main(String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         N = Integer.parseInt(br.readLine());
         
-        // find Pattern
-        pattern = br.readLine();
-        int pos = pattern.indexOf("*");
-        char[] tmpArr = pattern.toCharArray();
-        
-        // find Head Pattern
-        for (int i = 0; i < pos; i++) {
-            headPattern += tmpArr[i];
-        }
-        
-        // find Tail Pattern
-        for (int i = pos+1; i < tmpArr.length; i++) {
-            tailPattern += tmpArr[i];
-        }
-        
+        // find head, tail pattern
+        pArr = br.readLine().split("\\*");
+        headPattern = pArr[0];
+        tailPattern = pArr[1];
+
 
         for(int i = 0; i < N; i++) {
             String tmpStr = br.readLine();
@@ -41,14 +31,18 @@ class Main {
     }
     
     static boolean check(String tmpStr) {
-        // a*a, a와 같은 반례 존재
-        if (tmpStr.length() < pattern.length() - 1) {
+        // a*a, a와 같은 반례 존재함
+        if (tmpStr.length() < headPattern.length() + tailPattern.length()) {
             return false;
         }
-        if(tmpStr.indexOf(headPattern) != 0 ) {
+        
+        String head = tmpStr.substring(0, headPattern.length());
+        String tail = tmpStr.substring(tmpStr.length() - tailPattern.length(), tmpStr.length());
+
+        if(!head.equals(headPattern)) {
             return false;
         }
-        if(tmpStr.length() - tailPattern.length() != tmpStr.lastIndexOf(tailPattern)) {
+        if(!tail.equals(tailPattern)) {
             return false;
         }
         return true;
