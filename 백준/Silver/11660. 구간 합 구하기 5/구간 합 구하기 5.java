@@ -1,5 +1,7 @@
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.StringTokenizer;
 
 class Main {
@@ -10,6 +12,7 @@ class Main {
     
     public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
         StringTokenizer st = new StringTokenizer(br.readLine());
         StringBuilder sb = new StringBuilder();
         
@@ -22,7 +25,7 @@ class Main {
         for(int i = 1; i <= N; i++) {
             st = new StringTokenizer(br.readLine());
             for(int j = 1; j <= N; j++) {
-                arr[i][j] = arr[i][j-1] + Integer.parseInt(st.nextToken()); // 행 기준으로 더함
+                arr[i][j] = arr[i][j-1] + arr[i-1][j] - arr[i-1][j-1] + Integer.parseInt(st.nextToken()); // 행 기준으로 더함
                 
             }
         }
@@ -35,16 +38,13 @@ class Main {
             x2 = Integer.parseInt(st.nextToken());
             y2 = Integer.parseInt(st.nextToken());
             
-            int height = x2-x1+1;
-            int sum = 0;
-            for(int j = x1; j < x1+height; j++) {
-                sum += arr[j][y2] - arr[j][y1-1];
-            }
+            int sum = arr[x2][y2] + arr[x1-1][y1-1] - arr[x1-1][y2] - arr[x2][y1-1];
             sb.append(sum).append("\n");
         }
         
-        System.out.println(sb.toString());
-
+        // System.out.println(sb.toString());
+        bw.write(sb.toString());
+        bw.close();
         
         
         
