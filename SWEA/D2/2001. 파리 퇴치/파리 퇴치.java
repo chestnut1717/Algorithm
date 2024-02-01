@@ -2,7 +2,6 @@ import java.util.*;
 import java.io.*;
 
 /**
- * @author 박선홍
  * @since jdk1.8
  * @see <a href="https://www.acmicpc.net/problem/1620">
  * - 문제 : SWEA 2001-파리퇴치
