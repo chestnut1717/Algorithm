@@ -1,8 +1,6 @@
 import java.util.*;
-import java.io.*;
 
 /**
- * @author 박선홍
  * @since jdk1.8
  * - 문제 : BJ 2164 카드2
  * - 소요시간 : 5분 
