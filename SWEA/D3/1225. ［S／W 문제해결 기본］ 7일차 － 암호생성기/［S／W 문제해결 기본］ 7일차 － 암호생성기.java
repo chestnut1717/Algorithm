@@ -3,7 +3,7 @@ import java.util.*;
 
 /**
  * @since jdk1.8
- * - 문제 : SWEA 16744. 마이쭈시뮬레이션_실습
+ * - 문제 : SWEA 1225. 암호생성기
  * - 소요시간 : 20분 
  * - 난이도 : 상
  * - 1. 큐를 활용해 간단히 해결 가능. 
@@ -20,16 +20,16 @@ class Solution {
 		/* 테스트 케이스 돌아감 */
 		for (int test_case = 1; test_case <= T; test_case++) {
 			StringTokenizer st = new StringTokenizer(br.readLine());
-			
+
 			Queue<Integer> q = new ArrayDeque<>();
-			
+
 			// 초기 숫자 넣기
 			st = new StringTokenizer(br.readLine());
 			for(int i = 0; i < 8; i++) {
 				q.add(Integer.parseInt(st.nextToken()));
 			}
-			
-		
+
+
 			boolean flag = true;
 			while (flag) {
 				// 사이클 시작
@@ -50,7 +50,7 @@ class Solution {
 				System.out.printf("%d ", num);
 			}
 			System.out.println();
-		
+
 		}
 	}
 }
