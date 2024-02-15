@@ -63,12 +63,16 @@ class Solution{
 	    for(int i = 0; i < N; i++) {
 	        if(!visited[i]) {
 
-	            visited[i] = true;
 	            int nextY = customer[i][0];
 	            int nextX = customer[i][1];
 	            int addDist = calc(nextY, nextX, startY, startX);
-	            perm(cnt+1, dist + addDist, nextY, nextX);
-	            visited[i] = false;
+	            if (min <= dist + addDist) return; // 백트래킹
+	            else{
+	                visited[i] = true;
+	                perm(cnt+1, dist + addDist, nextY, nextX);
+	                visited[i] = false; 
+	            }
+	            
 	        }
 	    }
 	}
