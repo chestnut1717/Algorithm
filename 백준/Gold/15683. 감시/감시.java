@@ -1,23 +1,34 @@
 import java.util.*;
 import java.io.*;
-
+/**
+ * @since jdk1.8
+ * @see <a href="https://www.acmicpc.net/problem/1620">
+ * - 문제 : BJ 15683 감시
+ * - 난이도 : 중
+ * - 아이디어 : 전형적인 dfs + 구현 문제
+ * - cctv의 회전을 고려하면서, cctv가 탐지하지 못하는 경우의 수(ex. 벽), 탐지하는 경우의; 수를 모두 고려
+ * - 중복순열을 활용하여 n개의 cctv의 모든 경우의 수를 구한 후 반복문 돌림
+ * - 시간복잡도 : N^8(중복순열 개수) * 4(방향 rotate) but cctv는 최대 8개 시간제한 있으므로 충분히 가능 
+ */
 public class Main {
     static final int[] dy = {0, 1, 0, -1};
     static final int[] dx = {1, 0, -1, 0};
     static int N, M;
     static int[][] arr;
-    static int[][] track;
+    static int[][] track; // 현재 cctv의 사각지대를 찾아보는 경우
     static int cnt; // cctv 개수
     static int[] possible; // 회전 경우의 수 담는 배열
-    static List<List<Integer>> possibleLst = new ArrayList<>();
-    static List<Pair> cctv = new ArrayList<>();
+    static List<List<Integer>> possibleLst = new ArrayList<>(); // 가능한 모든 경우의 
+    static List<Pair> cctv = new ArrayList<>(); // CCTV 좌표 모두 담는 경우의 수
     static int result = Integer.MAX_VALUE;
+    
 	public static void main(String[] args) throws Exception{
 	    BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st = new StringTokenizer(br.readLine());
 		N = Integer.parseInt(st.nextToken());
 		M = Integer.parseInt(st.nextToken());
 		
+		// 현재 사무실 상태 입력받기
 		arr = new int[N][M];
 	    track = new int[N][M];
 		for(int i = 0; i < N; i++) {
@@ -31,15 +42,10 @@ public class Main {
 		    }
 		}
 		
+		// 중복조합을 위한 변수 초기화
 		possible = new int[cnt];
-		// copy
-		for(int i = 0; i < N; i++) {
-		    for(int j = 0; j < M; j++) {
-		        track[i][j] = arr[i][j];
-		    }
-		}
-		
-
+		// 우선 track 배열을 array변수 그대로 복사함
+		copy();
 		// 중복순열 구하기
 		perm(0);
 		
@@ -47,21 +53,15 @@ public class Main {
 		for(List<Integer> lst: possibleLst) {
 		    // 모든 direction에 대해 구하기
 		    for(int i = 0; i < lst.size(); i++) {
-		      //  System.out.println(lst.toString());
 		        Pair nowCCTV = cctv.get(i); // 현재 cctv
 		        int direction = lst.get(i); // direction
-		        rotate(nowCCTV, direction);
-		        // 0의 갯수 구하기
+		        rotate(nowCCTV, direction); // 돌리고 돌리고
 
-		      //  result = Math.min(count(), result);
-		      //  print();
-                
-                // System.out.println();
  		    }
- 		 //   print();
- 		 //   System.out.printf("%d, %d%n", count(), result);
  		    
+ 		    // 사각지대 최소의 개수 갱신
  		    result = Math.min(count(), result);
+ 		    // 다음 iteration을 위해 사각지대 개수 초기화
  		    copy();
  		    
 		}
@@ -69,12 +69,9 @@ public class Main {
 		
 		System.out.println(result);
         
-		
-        
-		
 
 	}
-	
+	// 0 개수 count하는 메소드
 	static int count() {
 	    int zeroCnt = 0;
         for(int j = 0; j < N; j++) {
@@ -84,15 +81,7 @@ public class Main {
         }
         return zeroCnt;
 	}
-	
-	static void print() {
-	   for(int j = 0; j < N; j++) {
-    	   for(int k = 0; k < M; k++){
-    	       System.out.printf("%d", track[j][k]);
-    	        }
-            System.out.println();
-        }
-	}
+    // 변수 count
 	static void copy() {
 	    for(int j = 0; j < N; j++) {
             for(int k = 0; k < M; k++) {
@@ -100,9 +89,11 @@ public class Main {
         	}
         }
 	}
+	// 범위 밖의 좌표 탐지
 	static boolean isIn(int y, int x) {
 	    return 0 <= y && y < N && 0 <= x && x < M;
 	}
+	// 특정 cctv를 회전시키고, cctv 탐지구역 칠해주는 함수
 	static void rotate(Pair nowCCTV, int direction) {
 	    int y = nowCCTV.y;
 	    int x = nowCCTV.x;
@@ -132,6 +123,7 @@ public class Main {
 	    
 	}
 	
+	// cctv 탐지 가능 경우를 깊이우선 탐색
 	static void dfs(int y, int x, int direction) {
 	    if(!isIn(y, x) || arr[y][x] == 6) {
 	        return; // 종료 조건
@@ -142,8 +134,9 @@ public class Main {
 	    dfs(ny, nx, direction);
 	}
 	
-	// 중복순열
+	// n개의 cctv의 모든 방향을 계산하는 중복순열
 	static void perm(int depth) {
+	    // 종료조건
 	    if(depth == cnt) {
 	       List<Integer> tmp = new ArrayList<>();
 	       for(int i = 0; i < possible.length; i++) {
@@ -159,7 +152,7 @@ public class Main {
 	    
 	}
 	
-
+    // cctv 좌표값 저장하는 클래스 
 	static class Pair {
     	    int y;
     	    int x;
