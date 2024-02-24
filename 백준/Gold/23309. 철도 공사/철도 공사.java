@@ -1,10 +1,27 @@
 import java.util.*;
 import java.io.*;
 
-// 1. 문제셜계 : 30분
-// 2. 입려받기 : 10분
-// 3. 최적화 : 50분
-// 4. 수정 : 10분 => StringBuilder랑 BufferedWriter 실수로 빼먹음
+/**
+ * @since jdk1.8
+ * @see <a href="https://www.acmicpc.net/problem/1620">
+ * - 문제 : BJ 10972 다음 순열
+ * - 소요시간 : 1시간 40분
+ *   1. 문제설계 : 30분
+ *   2. 입려받기 : 10분
+ *   3. 최적화 : 50분
+ *   4. 수정 : 10분 => StringBuilder랑 BufferedWriter 실수로 빼먹음
+ * - 난이도 : 중
+ * - 메모리 : 395624 KB / 시간 : 1856 ms
+ * 
+ * - 아이디어 : 배열을 활용하여 O(M)의 시간복잡도로 해결해야 하는 문제
+ * - subway배열, prev와 next를 담은 custom Node클래스를 활용해 문제 전개 
+ * - subway배열의 인덱스는 현재 node의 번호를 나타내므로 Node에 별도로 담을 필요 없음(메모리 절약)
+ * - N보다 지하철 번호가 클 수 있으므로 tmpArr을 활용해서 미리 임시로 담아둔다음 for-each를 통해서 다시 담아줌
+ * - 그리고 명령어가 들어오면 cmd에 따라 현재 노드와 인접해 있는 노드들의 새로운 데이터를 추가, 삭제해주고prev, next를 변경해주는 연산을 통해 O(1)의 시간복잡도 지킬 수 있음
+ * - 주의할 점 : 역의 고유 번호는 1,000,000이하 자연수 => 실제로 N은 2이지만 숫자는 1, 1000000이 들어올 수 있음
+ *   => 사전에 지하철 관리하는 배열 미리 1,000,000+a로 초기화
+ */
+
 public class Main
 {   
     static int N, M;// 역의 개수, 공사 횟수
@@ -22,11 +39,9 @@ public class Main
 		subway = new Node[1000001]; // 역의 고유번호 최댓값 생성
 		
 		// 0. 지하철 입력
-		int max = Integer.MIN_VALUE;
 		st = new StringTokenizer(br.readLine());
 		for(int i = 0; i < N; i++){
 		    tmpArr[i] = Integer.parseInt(st.nextToken());
-		    max = Math.max(max, tmpArr[i]);
 		}
 		
 		// 1. 지하철 배열에 추가
@@ -50,6 +65,8 @@ public class Main
 		next = tmpArr[0];
 		subway[now] = new Node(prev, next);
 		
+		// 메모리 회수
+		tmpArr = null;
 		
 		// 2. 커맨드 입력
 		for(int i = 0; i < M; i++) {
