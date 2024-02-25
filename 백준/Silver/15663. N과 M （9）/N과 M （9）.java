@@ -7,7 +7,6 @@ public class Main{
     static int[] input;
     static int[] numbers;
     static boolean[] visited;
-    static LinkedHashSet<List<Integer>> set = new LinkedHashSet<>();
     static StringBuilder sb = new StringBuilder();
 	public static void main(String[] args) throws Exception{
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -30,12 +29,7 @@ public class Main{
 		Arrays.sort(input);
 		
 		perm(0);
-		for(List<Integer> lst: set) {
-		    for(int i: lst) {
-		        sb.append(i).append(" ");
-		    }
-		    sb.append('\n');
-		}
+
 		bw.write(sb.toString());
 		bw.close();
 	}
@@ -43,19 +37,24 @@ public class Main{
 	// 순열 구하기
     static void perm(int cnt) {
         if(cnt == M) {
-            List<Integer> tmpList = new ArrayList<>();
             for(int i = 0; i < M; i++) {
-                tmpList.add(numbers[i]);
+                sb.append(numbers[i]).append(" ");
             }
-            set.add(tmpList);
+            sb.append("\n");
             return;
         }
+        int before = -1; // 현재 자리수(cnt)의 경우의 수를 갱신하면서, 이전에 나왔던 수가 나왔는지 확인하는 변수
         for(int i = 0; i < N; i++) {
             if(visited[i]) continue;
-            visited[i] = true;
-            numbers[cnt] = input[i];
-            perm(cnt+1);
-            visited[i] = false;
+            
+            if(before != input[i]) {
+                visited[i] = true;
+                before = input[i];
+                numbers[cnt] = input[i];
+                perm(cnt+1);
+                visited[i] = false;
+            }
+            
         }
     }
 	    
