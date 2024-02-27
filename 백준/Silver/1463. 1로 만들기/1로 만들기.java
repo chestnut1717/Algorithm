@@ -10,25 +10,17 @@ public class Main {
 		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 		N = Integer.parseInt(br.readLine());
 		
-		memo = new int[1000004]; // 1~N까지 다루는 변수 초기화
-		memo[1] = 0;
-		memo[2] = 1;
-		memo[3] = 1;
-		memo[4] = 2;
-		memo[5] = 3;
-	    if(N <= 5) {
-	        sb.append(memo[N]);
-	    }
-	    else {
-	        for(int i = 4; i <= N; i++) {
-	            if(i % 6 == 0) memo[i] = Math.min(Math.min(memo[i/3], memo[i/2]), memo[i-1]) + 1;
-	            else if(i % 2 == 0) memo[i] = Math.min(memo[i/2], memo[i-1]) + 1;
-	            else if(i % 3 == 0) memo[i] = Math.min(memo[i/3], memo[i-1]) + 1;
-	            else memo[i] = memo[i-1]+1;
-	        }
+		memo = new int[N+1]; // 1~N까지 다루는 변수 초기화
+		
 
-	        sb.append(memo[N]);
-	   }
+        for(int i = 2; i <= N; i++) {
+            memo[i] = memo[i-1]+1;
+            if(i % 2 == 0 && memo[i] > memo[i/2] + 1) memo[i] = memo[i/2] + 1;
+            if(i % 3 == 0 && memo[i] > memo[i/3] + 1) memo[i] = memo[i/3] + 1;
+        }
+
+        sb.append(memo[N]);
+	   
 	    
 		
 		bw.write(sb.toString());
