@@ -70,35 +70,25 @@ public class Main
 	}
 	
 	// 궁수가 가장 가까운 적을 찾는 코드
-	static PriorityQueue<Pair> bfs(int archerY, int archerX) {
+	static Pair bfs(int archerY, int archerX) {
 	    Queue<Pair> q = new ArrayDeque<>();
-	    PriorityQueue<Pair> pq = new PriorityQueue<>();
 	    // 거리 가까운 적들 저장하는 용도!
 	    boolean[][] visited = new boolean[N][M]; // 방문 배열
 	    
 	    // 해당 궁수 맨 앞에 있는 것 방문하기
-	    q.offer(new Pair(archerY-1, archerX, 1));
+	    q.offer(new Pair(archerY-1, archerX));
 	    visited[archerY-1][archerX] = true;
 	    // 만약 궁수 바로 앞이적이라면, 바로 반환 해주기(가장 가까울 수밖에 없음)
 	    if(map[archerY-1][archerX] == 1) {
-	        pq.offer(new Pair(archerY-1, archerX, 1));
-	        return pq;
+	        return new Pair(archerY-1, archerX);
 	    }
 	    
-	    boolean flag = false;
-	    int limit = D;
+	    int limit = 1;
 	    // 큐가 비지 않으면서, 제한 거리를 넘을 때 진행!
 	    while(!q.isEmpty()) {
-	        
 	        Pair nextLocation = q.poll();
 	        int y = nextLocation.y;
 	        int x = nextLocation.x;
-	        int dist = nextLocation.dist;
-	        
-	        if(flag == true && dist >= limit) {
-	           break; 
-	        }
-	        
 	        // 위로만 가므로 3방탐색이다!
 	        for(int i = 0; i < 3; i++) {
 	            int ny = y + dy[i];
@@ -107,22 +97,25 @@ public class Main
 	            // 방문하지 않았으면
 	            if(isIn(ny, nx) && !visited[ny][nx]) {
 	                visited[ny][nx] = true;
-	                int newDist = calcDist(archerY, ny, archerX, nx) ;
+	                limit = calcDist(archerY, ny, archerX, nx); // limit갱신
+
+	                // 궁수가 쏠 수 있는임계치를 초과했을 때
+	                if(limit > D) {
+	                    return null;
+	                }
+	                
 	                // 만약 그 위치에 적이 있다면 => 바로 출력(왜냐하면 가장 왼쪽에 있는 것을 치므로)
-	                if(map[ny][nx] == 1 && newDist <= D) {
-	                    flag = true;
-	                    limit = newDist;
-	                    pq.add(new Pair(ny, nx, newDist));
+	                if(map[ny][nx] == 1) {
+	                    return new Pair(ny, nx);
 	                }
 	                else {
-	                    q.offer(new Pair(ny, nx, newDist));
+	                    q.offer(new Pair(ny, nx));
 	                }
 	            }
 	        }
 	    }
-	    
-
-	    return pq;
+	    // 큐가 빌 때까지 맞출 적이 없었다는 것을 의미
+	    return null;
 	    
 	    
 	}
@@ -143,12 +136,11 @@ public class Main
 	    //  => 이때 모든 목표에 대한 계산을 해야 함
 	    final int archerY = N;
 	    int killed = 0;
-	    HashSet<List<Integer>> set = new HashSet<>();
+	    HashSet<List<Integer>> set = new HashSet<>(); // 중복제거용
 	    for(int archerX: combi) {
 	        // 각 궁수의 좌표를 가지고 가장 가장 가까운 궁수 값 가져오기
-	        PriorityQueue<Pair> pq = bfs(archerY, archerX);
-	        if(pq.size() == 0) continue; // 어떠한 적도 없다면 무시
-	        Pair enemy = pq.poll(); // 우선순위에 맨 앞에 있는 것 출력
+	        Pair enemy = bfs(archerY, archerX);
+	        if(enemy == null) continue; // 어떠한 적도 없다면 무시
 	        int y = enemy.y;
 	        int x = enemy.x;
 	        // 해당 적의 좌표를 지우기(적이 있을 경우에만 반호나)
@@ -156,8 +148,6 @@ public class Main
 	            set.add(Arrays.asList(y, x));
 	            
 	        }
-	        
-
 	    }
 	    // 동시에 쏴야 하므로 중복 제게ㅓ
     	for(List<Integer> lst: set) {
@@ -181,7 +171,7 @@ public class Main
 	        combination(depth+1, i+1);
 	    }
 	}
-
+	
 	// 거리 계산 함수
 	static int calcDist(int archerY, int targetY, int archerX, int targetX) {
 	    return Math.abs(archerY - targetY) + Math.abs(archerX - targetX);
@@ -192,18 +182,11 @@ public class Main
 	    return 0 <= y && y < N && 0 <= x && x < M;
 	}
 	
-	static class Pair implements Comparable<Pair>{
-	    int y, x, dist;
-	    public Pair(int y, int x, int dist){
+	static class Pair{
+	    int y, x;
+	    public Pair(int y, int x){
 	        this.y = y;
 	        this.x = x;
-	        this.dist = dist;
-	    }
-	    
-	    // 가장 왼쪽에 있는 값 우선 정렬하도록 함
-	    @Override
-	    public int compareTo(Pair o){
-	        return this.x - o.x;
 	    }
 	}
 }
