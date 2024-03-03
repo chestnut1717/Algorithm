@@ -32,19 +32,11 @@ public class Main {
             sum += num;
         }
         
-        if(sum == 0) flag = true;
-        else {
-            int divided = sum / 3; // 실제 조합 내 홀, 짝 조합 개수
-            int mod = sum % 3;
-            if(mod == 0) {
-                if(oddCnt > divided) flag = false;
-                else flag = true;
-            }
-            // 합이 3으로 나누어지지 않는다면 => 무조건 false(모든 물뿌리개조합의 합은 3으로 이루어져있음)
-            else {
-                flag = false;
-            }
-        }
+        int divided = sum / 3;
+        int mod = sum % 3;
+        
+        if(mod == 0 && oddCnt <= divided) flag = true;
+        else flag = false;
         
         if(flag) System.out.println("YES");
         else System.out.println("NO");
