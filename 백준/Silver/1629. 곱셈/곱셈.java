@@ -14,11 +14,13 @@ public class Main
 		// (A x B) / c = (AmodC) mod (BmodC)
 	}
 	static long recur(long A, long B, long C) {
-	    if(B == 1) {
-	        return A % C;
+	    if(B == 0) {
+	        return 1;
 	    }
-	    long temp = recur(A, B/2, C) % C;
-	    if (B % 2 == 0) return (temp * temp) % C;
-	    else return (temp * recur(A, B/2+1, C)) % C;
+	    long temp = recur(A, B/2, C);
+	    if (B % 2 == 0)
+            return temp * temp % C;
+        else
+            return (temp * temp % C) * A % C;
 	}
 }
