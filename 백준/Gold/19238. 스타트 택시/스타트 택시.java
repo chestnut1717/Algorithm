@@ -153,9 +153,11 @@ public class Main {
                 int ny = now.y + dy[i];
                 
                 if (nx < 0 || ny < 0 || nx > N-1 || ny > N-1 || map[nx][ny] == 1 || visited[nx][ny]) continue;
-                
-                q.add(new Move(nx, ny, now.dis+1));
-                visited[nx][ny] = true;
+                if(nearPerson.size() == 0) {
+                    q.add(new Move(nx, ny, now.dis+1));
+                    visited[nx][ny] = true;
+                }
+
             }
         }
     }
