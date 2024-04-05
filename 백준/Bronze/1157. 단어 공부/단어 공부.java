@@ -23,26 +23,19 @@ public class Main {
 		
 		// 모두 탐색이 끝났으면 최댓값을 찾는다.
 		int max = Integer.MIN_VALUE;
-        int idx = -1;
+        char c = '?';
+		
 		for(int i = 0; i < arr.length; i++) {
-		    if(max < arr[i]) {
-		        max = arr[i];
-		        idx = i;
+		    if (max < arr[i]) {
+		        c = (char) (i+65);
+                max = arr[i];
+		    } else if (max == arr[i]) {
+		        c = '?';
 		    }
 		}
 		
-		// 그다음 해당 최댓값이 얼마나 있는지 파악
-		int cnt = 0;
-		for(int i = 0; i < arr.length; i++) {
-		    if(arr[i] == max) cnt++;
-		    if(cnt > 1) break;
-		}
+		System.out.println(c);
+
 		
-		// 최댓값 출력 및 갱신
-		if(cnt > 1) {
-		    System.out.println("?");
-		} else {
-		    System.out.println((char) (idx + 65));
-		}
 	}
 }
