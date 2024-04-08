@@ -1,4 +1,4 @@
-// 3:37
+// 3:37 => 50분 걸림
 import java.util.*;
 import java.io.*;
 
@@ -12,8 +12,8 @@ public class Main
     static boolean[] visited;
     static long max = Long.MIN_VALUE;
     static long min = Long.MAX_VALUE;
-    static StringBuilder maxStr = new StringBuilder();
-    static StringBuilder minStr = new StringBuilder();
+    static String maxStr = "";
+    static String minStr = "9999999999";
     
 	public static void main(String[] args) throws Exception{
 	    BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -32,68 +32,49 @@ public class Main
 		perm = new int[N];
 		visited = new boolean[10];
 		
-		permutationCalc(0);
+		permutationCalc(0, new StringBuilder());
 		
 		System.out.println(maxStr);
 		System.out.println(minStr);
 	    
 	}
 	
-	static void permutationCalc(int depth) {
+	static void permutationCalc(int depth, StringBuilder tmpStr) {
 	   if(depth == N) {
-	       // 유효성 검증하고 최대, 최소 검증하는 역할을 한다.
-	       if (isValid()) calc();
+	       // 이제 여기서 유효성 검증한다.
+	       String tmp = tmpStr.toString();
+	       if(maxStr.compareTo(tmp) < 0) {
+	           maxStr = tmp;
+	       }
+	       if(minStr.compareTo(tmp) > 0) {
+	           minStr = tmp;
+	       }
+	      
 	       return;
 	   }
 	   for(int i = 0; i < 10; i++) {
 	       if(visited[numbers[i]]) continue;
-	       
+	       if(depth > 0 && !isValid(depth-1, numbers[i])) continue;
 	       visited[numbers[i]] = true;
+	       tmpStr.append(numbers[i]);
 	       perm[depth] = numbers[i];
-	       permutationCalc(depth+1);
+	       permutationCalc(depth+1, tmpStr);
 	       // visited는 0-~9로 이루어진 함수
+	       // 원복
 	       visited[numbers[i]] = false;
+	       tmpStr.setLength(tmpStr.length() - 1);
 	       
 	   }
 	}
-	static boolean isValid() {
+	static boolean isValid(int now, int number) {
 	    // 부등호가 구한 순열 순서와일치하는지 확인
-	    for(int i = 0; i < K; i++) {
-	        if(operators[i] == '<') {
-	            if(!(perm[i] < perm[i+1])) return false;
-	        } else if (operators[i] == '>') {
-	            if(!(perm[i] > perm[i+1])) return false;
-	        }
-	    }
+        if(operators[now] == '<') {
+            if(!(perm[now] < number)) return false;
+        } else if (operators[now] == '>') {
+            if(!(perm[now] > number)) return false;
+        }
 	    return true;
 	}
-	
-	static void calc() {
-	    // operator확인한 다음 최댓값, 최솟값 구함
-	    long sum = 0;
-	    for(int i = 0; i < N; i++) {
-	        sum += perm[i] * Math.pow(10, N-i);
-	    }
-	    
-	    // 갱신작업
-	    if (sum > max) {
-	        maxStr = new StringBuilder();
-	        max = sum;
-	        for(int i = 0; i < N; i++) {
-	            
-	            maxStr.append(perm[i]);
-	        }
-	        
-	    }
-	    if(sum < min) {
-	        minStr = new StringBuilder();
-	        min = sum;
-	        for(int i = 0; i < N; i++) {
-	            
-	            minStr.append(perm[i]);
-	        }
-	    }
-	    return;
-	}
+
 	
 }
