@@ -1,10 +1,10 @@
-import java.util.*;
 import java.io.*;
+import java.util.*;
 
-public class Main{
-    static int N;
-    static int M;
-    static int[] input;
+public class Main
+{
+    static int N, M;
+    static int[] arr;
     static int[] numbers;
     static boolean[] visited;
     static StringBuilder sb = new StringBuilder();
@@ -16,40 +16,41 @@ public class Main{
 		N = Integer.parseInt(st.nextToken());
 		M = Integer.parseInt(st.nextToken());
 		
-		input = new int[N];
-		visited = new boolean[N];
-		numbers = new int[M];
-		
+		// N개의 숫자 입력받음
+		arr = new int[N];
 		st = new StringTokenizer(br.readLine());
 		for(int i = 0; i < N; i++) {
-		    input[i] = Integer.parseInt(st.nextToken());
+		    arr[i] = Integer.parseInt(st.nextToken());
 		}
-
 		
-		Arrays.sort(input);
+		Arrays.sort(arr);
 		
-		perm(0);
+		// 배열 초기화
+		numbers = new int[M];
+		visited = new boolean[N];
+		calc(0);
+		
 		bw.write(sb.toString());
 		bw.close();
+		
+		
 	}
-	
-	// 중복조합 구하기
-	static void perm(int cnt){
-	    if(cnt == M) {
-	        for(int i = 0; i < M; i++){
-	            sb.append(numbers[i]).append(" ");
+
+	// 중복순열
+	static void calc(int depth) {
+	    if(depth == M) {
+	        for(int i = 0; i < M; i++) {
+	            sb.append(numbers[i]).append(' ');
 	        }
 	        sb.append('\n');
 	        return;
 	    }
-	    for(int i = 0; i < N; i++){
+	    for(int i = 0; i < N; i++) {
 	        if(visited[i]) continue;
 	        visited[i] = true;
-	        numbers[cnt] = input[i];
-	        perm(cnt+1);
+	        numbers[depth] = arr[i];
+	        calc(depth+1);
 	        visited[i] = false;
 	    }
-	    
-	    
 	}
 }
