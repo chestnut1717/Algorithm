@@ -6,7 +6,7 @@ public class Main
     static final long x = 1000000007;
     static int N; // 항의 개수
     static long result = 0;
-    static Map<Long, Long> map = new HashMap<>();
+    
 	public static void main(String[] args) throws Exception{
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st;
@@ -26,11 +26,9 @@ public class Main
 		    long a = Integer.parseInt(st.nextToken());
 		    long n = Integer.parseInt(st.nextToken());
 		    long temp;
-		    if ( n >= 1) {
-		        temp = (((a * n) % x) * divConquer(n-1)) % x;
-		    } else {
-		        temp = 0;
-		    }
+		    if(n == 0) continue; // 0이면 더할 것도 없다.
+		    
+		    temp = (((a * n) % x) * divConquer(n-1)) % x;
 		    
 		    result = (result + temp) % x;
             
@@ -51,12 +49,9 @@ public class Main
         if(n == 1) {
             return 2;
         }
-        if(map.containsKey(n/2)) {
-            temp = map.get(n/2);
-        } else {
-            temp = divConquer(n/2);
-            map.put(n/2, temp);
-        }
+
+        temp = divConquer(n/2);
+
 	    
 	    if(n%2==0) {
 	        return (temp * temp) % x;
