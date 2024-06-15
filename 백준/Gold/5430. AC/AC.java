@@ -25,7 +25,7 @@ public class Main
 	        
             if(N > 0) {
                 
-	            String[] arrString = temp.replaceAll("[\\[\\]]", "").split(",");
+	            String[] arrString = temp.substring(1, temp.length() - 1).split(",");
 	            
                 for(String s: arrString) {
     	            deque.add(Integer.parseInt(s));
