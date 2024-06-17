@@ -1,78 +1,81 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.Arrays;
-import java.util.StringTokenizer;
+import java.util.*;
+import java.io.*;
 
-public class Main {
-
-    public static void main(String[] args) throws IOException {
-
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-
-        int N = Integer.parseInt(br.readLine());
-        int[] crane = new int[N];
-        StringTokenizer st = new StringTokenizer(br.readLine());
-        for (int i = 0; i < N; i++) {
-            crane[i] = Integer.parseInt(st.nextToken());
+public class Main
+{
+    static int N;// 크레인 개수
+    static int[] cranes;
+    static int M; // 박스 개수
+    static int[] boxes;
+	public static void main(String[] args) throws Exception{
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st;
+		
+		// 크레인 입력
+		N = Integer.parseInt(br.readLine());
+		cranes = new int[N];
+		st = new StringTokenizer(br.readLine());
+		for(int i = 0; i < N; i++) {
+		    cranes[i] = Integer.parseInt(st.nextToken());
+		}
+		
+		// 박스 입력
+		M = Integer.parseInt(br.readLine());
+		boxes = new int[M];
+		
+		st = new StringTokenizer(br.readLine());
+		for(int i = 0; i < M; i++) {
+		    boxes[i] = Integer.parseInt(st.nextToken());
+		}
+		
+		// 우선 크레인 오름차순 정렬해준다.
+		Arrays.sort(cranes);
+		
+		// 그리고 박스도 오름차순으로 정렬해준다.
+		Arrays.sort(boxes);
+		
+		// 탐색 자체를 못할경우
+		if (boxes[M - 1] > cranes[N - 1]) {
+            System.out.println(-1);
+            System.exit(0);
         }
-        Arrays.sort(crane);
+		
+		Stack<Integer> stk = new Stack<>(); // 값 저장할 스택
 
-        int M = Integer.parseInt(br.readLine());;
-        Stack stack = new Stack(M);
-        st = new StringTokenizer(br.readLine());
-        for (int i = 0; i < M; i++) {
-            stack.push(Integer.parseInt(st.nextToken()));
-        }
-        Arrays.sort(stack.arr);
+		// 탐색 가능한 경우
+		for(int i = 0; i < boxes.length; i++) {
+		    stk.push(boxes[i]);
+		}
+			// 반복
+    	int time = 0;
+    	int minIndex = 0; // 무게제한때문에 들 수 없는 크레인은 제외
+    	while(!stk.isEmpty()) {
+    	    // 우선 스택이 빈다면
+    	    Stack<Integer> tmpStk = new Stack<>(); // 임시 스택
+    	    for(int i = N-1; i >= minIndex; i--) {
+    	        while(!stk.isEmpty() && stk.peek() > cranes[i]) {
+    	            int box = stk.pop();
+    	            tmpStk.push(box);
+    	        }
+    	        if(stk.isEmpty()) {
+        	        minIndex = i+1;
+        	        break;
+        	    } else {
+        	        stk.pop();
+        	    }
+    	    }
+    	    
+    	    
+    	    // 반복이 끝날 경우 임시 스택에 저장한 값 저장
+    	    while(!tmpStk.isEmpty()) {
+    	        stk.push(tmpStk.pop());
+    	    }
+    	    time++;
+    	}
+	
+    	
+    	System.out.println(time);
+	}
+	
 
-        int time = 0;
-        if (stack.peek() > crane[N - 1]) {
-            time = -1;
-        } else {
-            Stack temp = new Stack(M);
-            while (!stack.isEmpty()) {
-                for (int i = N - 1; i >= 0; i--) {
-                    int box;
-                    while (!stack.isEmpty() && (box = stack.pop()) > crane[i]) {
-                        temp.push(box);
-                    }
-                }
-
-                while (!temp.isEmpty()) {
-                    stack.push(temp.pop());
-                }
-                time++;
-            }
-        }
-
-        System.out.println(time);
-        br.close();
-    }
-
-    public static class Stack {
-        int[] arr;
-        int index;
-
-        public Stack(int M) {
-            arr = new int[M];
-            index = 0;
-        }
-
-        public void push(int num) {
-            arr[index++] = num;
-        }
-
-        public int pop() {
-            return arr[--index];
-        }
-
-        public int peek() {
-            return arr[index - 1];
-        }
-
-        public boolean isEmpty() {
-            return index == 0;
-        }
-    }
 }
