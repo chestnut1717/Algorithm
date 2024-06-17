@@ -37,7 +37,7 @@ public class Main
 		// 탐색 자체를 못할경우
 		if (boxes[M - 1] > cranes[N - 1]) {
             System.out.println(-1);
-            System.exit(0);
+            return;
         }
 		
 		Stack<Integer> stk = new Stack<>(); // 값 저장할 스택
