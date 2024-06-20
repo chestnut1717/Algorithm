@@ -3,8 +3,6 @@ import java.io.*;
 
 public class Main
 {
-    static final int[] dy = {0, 1, 0, -1};
-    static final int[] dx = {1, 0, -1, 0};
     static int N, M, H;
     static int[][] arr;
     static Pair home;
