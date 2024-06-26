@@ -33,26 +33,26 @@ public class Main
 	        list.get(b).add(a);
 	    }
 	    
-        // 상근이의 학번은 1이므로 상근이의 친구들부터 탐색
-        isVisited[1]=true;
-        for(int friend: list.get(1)) {
-            
-            // 만약 아직 세지 않은 친구라면 => 더해주기
-            if(!isVisited[friend]) {
-                result++;
-                isVisited[friend] = true;
-            }
-            
-
-            for(int ff: list.get(friend)) {
-                if(isVisited[ff]) continue; // 이미 방문처리 친구들 무시
-                isVisited[ff] = true;
-                result++;
-            }
-        }
+	    isVisited[1] = true;
+        // dfs탐색으로도 가능
+        dfs(0, 1);
         
-        System.out.println(result);
+        // 그 후 isVisited 개수 세기
+        for(int i = 2; i <= N; i++) {
+            if(isVisited[i]) result++;
+        }
 	    
+	    System.out.println(result);
 		
+	}
+	static void dfs(int depth, int start) {
+	    if(depth == 2) {
+	        return;
+	    }
+	    
+	    for(int friend: list.get(start)) {
+	        isVisited[friend] = true;
+	        dfs(depth + 1, friend);
+	    }
 	}
 }
