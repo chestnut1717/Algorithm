@@ -87,11 +87,6 @@ public class Main
             isVisited[tmp[0]][tmp[1]] = true; // 가지 못하는 경우 visited처리 해주기
         }
         
-        for(int i = 0; i< M+1; i++) {
-            for(int j = 0; j < N+1; j++) {
-                arr[i][j] = new int[]{0, 0};
-            }
-        }
         
         r2 = bfs(a1[0], a1[1], a2[0], a2[1]);
         if(r2 > -1) {
