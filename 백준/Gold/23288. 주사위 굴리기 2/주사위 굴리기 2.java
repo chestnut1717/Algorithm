@@ -7,6 +7,7 @@ public class Main
     static final int[] dx = {1, 0, -1, 0}; // 동 북 서 남
     static int N, M, K; // 세로, 가로, 이동횟수
     static int[][] map;
+    static boolean[][] visited;
     static int direction = 0; // 기본은 동쪽
     static int dice[][] = {
         {0, 2, 0, 0},
@@ -14,6 +15,7 @@ public class Main
         {0, 5, 0, 0},
         {0, 6, 0, 0}
     };
+    static int[][] weightMap;
     static int result; // 정답
 	public static void main(String[] args) throws Exception{
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -30,6 +32,10 @@ public class Main
 		        map[i][j] = Integer.parseInt(st.nextToken());
 		    }
 		}
+		
+		weightMap = new int[N][M];
+		visited = new boolean[N][M];
+
 
 	    
 	    int y = 0;
@@ -37,10 +43,6 @@ public class Main
 	    int r = 0;
 	    int c = 0;
 	    for(int i = 0; i < K; i++) {
-	        // 주사위 굴리기
-
-    	    
-    	    
 	        // 이동 방향대로 한 칸 이동한다.
 	        int ny = y + dy[direction];
 	        int nx = x + dx[direction];
@@ -57,6 +59,7 @@ public class Main
 	        
 	        r = ry;
 	        c = cx;
+	        
 	        rollDice(direction);
 	        // 위치 할당
 	        y = ny;
@@ -65,9 +68,10 @@ public class Main
 	        
             // 이동한 후 => 도착한 칸 (x, y) 점수 획득 B
 	        // 이때 bfs를 활용한다.
-	        int cnt = bfs(y, x);
-	        result += cnt;
-	        
+	        if (!visited[y][x]) {
+	            bfs(y, x);
+	        }
+	        result += weightMap[y][x];
 
 
     	    // A와 B 비교
@@ -91,11 +95,12 @@ public class Main
 	    return 0 <= y && y < N && 0 <= x && x < M;
 	}
 	
-	static int bfs(int y, int x) {
-	    boolean visited[][] = new boolean[N][M];
+	static void bfs(int y, int x) {
 	    int val = map[y][x];
         Queue<int[]> q = new ArrayDeque<>();
+        List<int[]> list = new ArrayList<>();
         q.offer(new int[]{y, x});
+        list.add(new int[]{y, x});
         visited[y][x] = true;
         
 	    // 개수 cnt
@@ -113,16 +118,21 @@ public class Main
 	            // 탐색을 한다.
 	            if(!isValid(ny, nx)) continue;
 	            if(visited[ny][nx]) continue;
-	            visited[ny][nx] = true;
+	            
 	            if(val == map[ny][nx]) {
+	                visited[ny][nx] = true;
 	                q.offer(new int[] {ny, nx});
+	                list.add(new int[]{ny, nx});
 	                cnt+= val;
 	            }
 	        }
 	        
 	    }
 	    
-	    return cnt;
+	    for(int[] coor: list) {
+	        weightMap[coor[0]][coor[1]] = cnt;
+	    }
+	    
 	}
 	
 	
