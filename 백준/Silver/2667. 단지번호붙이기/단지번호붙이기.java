@@ -62,7 +62,7 @@ public class Main
 	        for(int i = 0; i < 4; i++) {
 	            int ny = coor[0] + dy[i];
 	            int nx = coor[1] + dx[i];
-	            if(isValid(ny, nx) && !visited[ny][nx] && map[ny][nx] == 1) {
+	            if( 0 <= ny && ny < N && 0 <= nx && nx < N && !visited[ny][nx] && map[ny][nx] == 1) {
 	                visited[ny][nx] = true;
 	                cnt++;
 	                q.offer(new int[] {ny, nx});
@@ -73,7 +73,4 @@ public class Main
 	    return;
 	}
 	
-	static boolean isValid(int y, int x) {
-	    return 0 <= y && y < N && 0 <= x && x < N;
-	}
 }
