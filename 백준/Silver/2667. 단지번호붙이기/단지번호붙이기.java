@@ -1,68 +1,76 @@
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Queue;
-import java.util.ArrayDeque;
-import java.util.Collections;
+import java.util.*;
+import java.io.*;
 
-public class Main {
-    static final byte[] dy = {0, 1, 0, -1};
-    static final byte[] dx = {1, 0, -1, 0};
-    
-    public static void main(String[] args) throws Exception {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-        StringBuilder sb = new StringBuilder();
-
-        byte N = Byte.parseByte(br.readLine());
-
-        boolean[][] map = new boolean[N][N];
-        for(byte i = 0; i < N; i++) {
+public class Main
+{
+    static final int[] dy = {0, 1, 0, -1};
+    static final int[] dx = {1, 0, -1, 0};
+    static int N;
+    static int[][] map;
+    static boolean[][] visited;
+    static PriorityQueue<Integer> pq = new PriorityQueue<>();
+	public static void main(String[] args) throws Exception {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+		StringBuilder sb = new StringBuilder();
+		
+		N = Integer.parseInt(br.readLine());
+        
+        map = new int[N][N];
+        for(int i = 0; i < N; i++) {
             String row = br.readLine();
-            for(byte j = 0; j < N; j++) {
-                map[i][j] = (row.charAt(j) == '0' ? false : true);
+            for(int j = 0; j < N; j++) {
+                map[i][j] = row.charAt(j) - '0';
             }
         }
-
-        boolean[][] visited = new boolean[N][N];
-        List<Short> components = new ArrayList<>();
-        for(byte i = 0; i < N; i++) {
-            for(byte j = 0; j < N; j++) {
-                if(!visited[i][j] && map[i][j]) {
-                    Queue<byte[]> q = new ArrayDeque<>(); 
+        
+        visited = new boolean[N][N];
+        // 이제 각각의 grid를 탐색을 해서
+        // 해당 grid가 방문했는지 먼저 알아본 후 => 방문했으면 무시
+        // bfs를 통해서 connected component를 찾는다.
+        // connected component를 찾는 방법은 1이 있는지 탐색하면 된다.
+        for(int i = 0; i < N; i++) {
+            for(int j = 0; j < N; j++) {
+                // System.out.println(map[i][j]);
+                if(!visited[i][j] && map[i][j] == 1) {
                     visited[i][j] = true;
-                    q.offer(new byte[] {i, j});
-                    short cnt = 1;
-
-                    while(!q.isEmpty()) {
-                        byte[] coor = q.poll();
-                        for(byte k = 0; k < 4; k++) {
-                            byte ny = (byte) (coor[0] + dy[k]);
-                            byte nx = (byte) (coor[1] + dx[k]);
-                            if(0 <= ny && ny < N && 0 <= nx && nx < N && !visited[ny][nx] && map[ny][nx]) {
-                                visited[ny][nx] = true;
-                                cnt++;
-                                q.offer(new byte[] {ny, nx});
-                            }
-                        }
-                    }
-                    components.add(cnt);
+                    bfs(i, j);
                 }
+                
             }
         }
-
-        Collections.sort(components);
-
-        sb.append(components.size()).append('\n');
-        for(short size : components) {
-            sb.append(size).append('\n');
+        
+        sb.append(pq.size()).append('\n');
+        while(!pq.isEmpty()) {
+            sb.append(pq.poll()).append('\n');
         }
 
         bw.write(sb.toString());
         bw.close();
-    }
+        
+
+        
+        
+	}
+	static void bfs(int y, int x) {
+	    Queue<int[]> q = new ArrayDeque<>();
+	    q.offer(new int[] {y, x});
+	    int cnt = 1;
+	    
+	    while(!q.isEmpty()) {
+	        int[] coor = q.poll();
+	        for(int i = 0; i < 4; i++) {
+	            int ny = coor[0] + dy[i];
+	            int nx = coor[1] + dx[i];
+	            if( 0 <= ny && ny < N && 0 <= nx && nx < N && !visited[ny][nx] && map[ny][nx] == 1) {
+	                visited[ny][nx] = true;
+	                cnt++;
+	                q.offer(new int[] {ny, nx});
+	            }
+	        }
+	    }
+        pq.offer(cnt);
+	    return;
+	}
+	
 }
