@@ -11,6 +11,7 @@ public class Main
     static int[][] board;
     static List<int[]> malList = new ArrayList<>();
     static boolean[][] visited;
+    static int result;
  	public static void main(String[] args) throws Exception{
 	    BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 	    StringTokenizer st = new StringTokenizer(br.readLine());
@@ -31,6 +32,8 @@ public class Main
 	        // q박아놓기
 	        board[y][x] = 1;
 	        malList.add(new int[] {y, x});
+	        result++;
+	        visited[y][x] = true;
 	    }
 	    
 	    // knight
@@ -42,6 +45,8 @@ public class Main
 	        // q박아놓기
 	        board[y][x] = 2;
 	        malList.add(new int[] {y, x});
+	        result++;
+	        visited[y][x] = true;
 	    }
         
         // pawn
@@ -53,6 +58,8 @@ public class Main
 	        // q박아놓기
 	        board[y][x] = 3;
 	        malList.add(new int[] {y, x});
+	        result++;
+	        visited[y][x] = true;
 	    }
 	    
 	    // 다 입력했으면 이제 탐색을 진행한다.
@@ -65,8 +72,6 @@ public class Main
 	        switch(board[y][x]) {
 	            // queen
 	            case 1:
-	                // 우선 방문처리
-	                visited[y][x] = true;
 	                // 8방향으로 탐색해서 갈 수 있는데까지 탐색
 	                for(int i = 0; i < 8; i++) {
 	                    int qy = y;
@@ -79,7 +84,10 @@ public class Main
 	                        // 만약 다음 칸이 어딘가 막혀있다면 끝내기
 	                        if(board[ny][nx] != 0) break;
 	                        else {
-	                           visited[ny][nx] = true;
+	                           if(!visited[ny][nx]) {
+	                               result++;
+	                               visited[ny][nx] = true;
+	                           }
 	                           qy = ny;
 	                           qx = nx;
 	                        }
@@ -88,33 +96,24 @@ public class Main
 	                break;
 	            // knight
 	            case 2:
-	                visited[y][x] = true;
 	                for(int i = 0; i < 8; i++) {
 	                    int ny = y + kdy[i];
 	                    int nx = x + kdx[i];
 	                    // 유효한 곳이고 방문 안했다면
 	                    if(0 < ny && ny <= N && 0 < nx && nx <= M && !visited[ny][nx]) {
+	                        result++;
 	                        visited[ny][nx] = true;
 	                    }
 	                }
 	                break;
 	            // pawn
 	            case 3:
-	                visited[y][x] = true;
 	                break;
 	            default:
 	                break;
 	           
 	        }
 	    }
-	    
-	    // 이제 visited되지 않은것만 센다.
-	    int result = 0;
-	    for(int y = 1; y < N+1; y++) {
-	        for(int x = 1; x < M+1; x++) {
-	            if(visited[y][x] == false) result++;
-	        }
-	    }
-	    System.out.println(result);
+	    System.out.println( N * M - result);
 	}
 }
