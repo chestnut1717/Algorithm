@@ -8,7 +8,7 @@ public class Main
     static final int[] qdy = {0, -1, -1, -1, 0, 1, 1, 1};
     static final int[] qdx = {1, 1, 0, -1, -1, -1, 0, 1};
     static int N, M;
-    static int[][] board;
+    static byte[][] board;
     static List<int[]> malList = new ArrayList<>();
     static boolean[][] visited;
     static int result;
@@ -18,7 +18,7 @@ public class Main
 	    N = Integer.parseInt(st.nextToken());
 	    M = Integer.parseInt(st.nextToken());
 	    
-	    board = new int[N+1][M+1];
+	    board = new byte[N+1][M+1];
 	    visited = new boolean[N+1][M+1];
 	    
 	    // 우선 각각의 좌표 입력
