@@ -106,9 +106,6 @@ public class Main
 	                    }
 	                }
 	                break;
-	            // pawn
-	            case 3:
-	                break;
 	            default:
 	                break;
 	           
