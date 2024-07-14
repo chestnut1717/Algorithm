@@ -1,5 +1,5 @@
-import java.util.*;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 
 public class Main
 {
@@ -14,8 +14,8 @@ public class Main
 		arr[0] = 1;
 		for(int i = 1; i < 64; i++) {
 		    arr[i] = arr[i-1] << 1;
+		    if(arr[i] > N) break;
 		}
-		
 		
 		System.out.println(thueMorse(N));
 		
