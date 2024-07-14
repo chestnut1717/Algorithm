@@ -13,7 +13,7 @@ public class Main
 		// 각각의 거듭제곱을 채워준다.
 		arr[0] = 1;
 		for(int i = 1; i < 64; i++) {
-		    arr[i] = arr[i-1] * 2;
+		    arr[i] = arr[i-1] << 1;
 		}
 		
 		
