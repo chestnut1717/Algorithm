@@ -17,6 +17,7 @@ public class Main
 	    n = Integer.parseInt(st.nextToken());
 	    m = Integer.parseInt(st.nextToken());
 	    
+	    map = new int[n+1][n+1];
 	    // 리스트 초기화
 	    for(int i = 0; i < n+1; i++) {
 	        list.add(new ArrayList<>());
@@ -41,12 +42,23 @@ public class Main
 	        dijkstra(i);
 
 	    }
+        for(int i = 1; i <= n; i++) {
+            for(int j = 1; j <= n; j++) {
+                if (map[i][j] != 0) sb.append(map[i][j]).append(' ');
+                else sb.append('-').append(' ');
+            }
+            sb.append('\n');
+        }
+            
 
+
+        
         bw.write(sb.toString());
 	    bw.close();
 		
 	}
     static void dijkstra(int initStart) {
+        boolean[] visited = new boolean[n+1];
 
         int[] dist = new int[n + 1];
         int[] first = new int[n + 1];
@@ -67,28 +79,29 @@ public class Main
         
         PriorityQueue<Node> pq = new PriorityQueue<>();
         pq.add(new Node(initStart, 0));
+        visited[initStart] = true;
         
         while (!pq.isEmpty()) {
             Node node = pq.poll();
             int num = node.n;
             int weight = node.w;
+                
+                visited[num] = true;
             
             for (Node next : list.get(num)) {
+                if(visited[next.n]) continue;
                 if (dist[num] + next.w < dist[next.n]) {
                     dist[next.n] = dist[num] + next.w;
                     pq.add(new Node(next.n, dist[next.n]));
-                    if (num == initStart)
-                        continue;
-                    first[next.n] = first[num];
+   
+                    first[next.n] = num;
                 }
             }
         }
         
         for (int i = 1; i <= n; i++) {
-            if (first[i] != 0) sb.append(first[i]).append(' ');
-            else sb.append('-').append(' ');
+            map[i][initStart] = first[i];
         }
-        sb.append('\n');
         
         
     }
