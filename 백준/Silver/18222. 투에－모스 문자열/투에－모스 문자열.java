@@ -12,23 +12,21 @@ public class Main
 		arr = new long[64];
 		// 각각의 거듭제곱을 채워준다.
 		arr[0] = 1;
-		int pivot = ((N & (N - 1)) == 0) ? (int) (Math.log(N) / Math.log(2)) -1 : (int) (Math.log(N) / Math.log(2));
-		
-		for(int i = 1; i <= pivot+1; i++) {
+		for(int i = 1; i < 64; i++) {
 		    arr[i] = arr[i-1] << 1;
+		    if(arr[i] > N) break;
 		}
 		
-
-		System.out.println(thueMorse(N, pivot));
-
+		System.out.println(thueMorse(N));
 		
 	}
 	
-	static int thueMorse(long n, int pivot) {
-	    if (n == 1L || n == 0L) return 0;
-
-        long nextN = (n - arr[pivot] == 0) ? n - arr[pivot-1] : n - arr[pivot];
-        int nextPivot = (int) (Math.log(nextN) / Math.log(2));
-	    return 1 - thueMorse(nextN, nextPivot);
+	static int thueMorse(long n) {
+	    if (n == 1L) return 0;
+	    for(int i = 0; i < 64; i++) {
+	        if (arr[i] >= n) return 1 - thueMorse(n - arr[i-1]);
+	    }
+	    
+	    return 0;
 	}
 }
