@@ -20,6 +20,7 @@ class Solution {
             k--;
         }
         
+        
         // 그리고 뒤에서부터 빼준다.
         for(int i = 0; i < targetN; i++) {
             sb.append(stk.pop());
