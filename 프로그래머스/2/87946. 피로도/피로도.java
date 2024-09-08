@@ -23,6 +23,7 @@ class Solution {
         } while(nextPermutation());
         
         
+        
         return result;
     }
     
