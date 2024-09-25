@@ -11,7 +11,6 @@ class Solution {
             if(next.startsWith(prefix)) return false;
 
             
-            
         }
         
         return true;
