@@ -8,6 +8,7 @@ class Solution {
         Map<String, Integer> keyMap = new HashMap<>(); // 장르별로 정렬하기 위한 map
         List<Integer> answer = new ArrayList<>();
         
+        
         // 이제 음악의 개수만큼 반복문을 돌리면서
         int N = genres.length;
         for(int i = 0; i < N; i++) {
