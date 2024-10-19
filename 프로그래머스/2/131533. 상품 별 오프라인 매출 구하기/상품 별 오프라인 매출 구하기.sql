@@ -1,0 +1,14 @@
+-- 10:19
+-- product
+-- 상품코드 : 중복 x
+
+-- offline_sale
+-- 동일한 날짜, 상품 ID조합에 대해서는 하나의 판매 데이터만 존재
+
+-- 
+SELECT P.PRODUCT_CODE, SUM(P.PRICE * OS.SALES_AMOUNT) as SALES
+FROM PRODUCT as P
+INNER JOIN OFFLINE_SALE AS OS
+ON P.PRODUCT_ID = OS.PRODUCT_ID
+GROUP BY P.PRODUCT_CODE
+ORDER BY SALES DESC, P.PRODUCT_CODE ASC;
