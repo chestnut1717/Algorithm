@@ -1,0 +1,10 @@
+-- IN, OUT INNER JOIN해서
+-- IN했을 때는 
+-- 여자면 Intact Female => Spayed Female이고
+-- 남자면 Intact Male => Neutered Male로
+SELECT INS.ANIMAL_ID, INS.ANIMAL_TYPE, INS.NAME
+FROM ANIMAL_INS AS INS
+INNER JOIN ANIMAL_OUTS AS OUTS
+ON INS.ANIMAL_ID = OUTS.ANIMAL_ID
+WHERE INS.SEX_UPON_INTAKE = 'Intact Female' AND OUTS.SEX_UPON_OUTCOME = 'Spayed Female'
+OR INS.SEX_UPON_INTAKE = 'Intact Male' AND OUTS.SEX_UPON_OUTCOME = 'Neutered Male'
