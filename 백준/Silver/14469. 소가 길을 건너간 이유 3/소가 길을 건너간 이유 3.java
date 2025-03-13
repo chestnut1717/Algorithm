@@ -27,18 +27,10 @@ public class Main
 		    Cow cow = pq.poll();
 		    int at = cow.arrTime;
 		    int dt = cow.durTime;
-		    
-		    // 만약 현재 시간보다 도착 시간이 더 길 경우
-		    // 현재 시간은 도착시간 + 걸리는 시간으로 변경
-		    
-		    if(resultTime < at) {
-		        resultTime = at + dt;
-		    }
-
-		    // 현재 시간이 더 크거나 같으면 소요시간만 더 추가
-		    else {
-		        resultTime += dt;
-		    }
+		      
+		    // resultTime과 도착시간만 갱신한 후 dt를 추가해주면 된다.
+		    resultTime = Math.max(resultTime, at);
+		    resultTime += dt;
 		}
 		
 		System.out.println(resultTime);
