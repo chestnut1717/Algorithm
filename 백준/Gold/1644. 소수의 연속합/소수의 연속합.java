@@ -25,35 +25,20 @@ public class Main
 		    }
 		}
 		
-		// 이제 이 소수 중에, 옆에서부터 line sweeping을 한다.
-		int right = list.size() - 1;
-		int left = right - 1;
-		int tmp= 0;
 		
-		if(N > 1 && list.get(right) == N) {
-		    result++;
-		}
+		int left = 0;
+		int right = 0;
+		int sum = 0;
+		int limit = list.size();
+		
 		
 		// 먼저 
-		while(left >= 0) {
-		    tmp = tmp + list.get(left) + list.get(right);
+		while(true) {
+		    if(sum >= N) sum -= list.get(left++);
+		    else if(right == limit) break;
+		    else sum += list.get(right++);
+		    if (sum == N) result++;
 
-		    if(tmp == N) {
-		        result++;
-		        tmp -= list.get(right);
-		        tmp -= list.get(right-1);
-		        right--;
-		        left--;
-		       
-		    } else if(tmp > N) {
-		        tmp -= list.get(right);
-		        tmp -= list.get(right-1);
-		        right--;
-		        left--;
-		    } else {
-		        tmp -= list.get(right);
-		        left--;
-		    }
 		}
 		
 		System.out.println(result);
