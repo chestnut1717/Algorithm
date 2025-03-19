@@ -1,66 +1,67 @@
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.util.ArrayList;
-import java.util.StringTokenizer;
- 
-public class Main {
- 
-    public static void main(String[] args) throws Exception {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-        StringTokenizer st = new StringTokenizer(br.readLine());
- 
-        int N = Integer.parseInt(st.nextToken());
-        int K = Integer.parseInt(st.nextToken());
- 
-        int[] order = new int[K];
-        st = new StringTokenizer(br.readLine());
-        for (int i = 0; i < K; i++) {
-            order[i] = Integer.parseInt(st.nextToken());
-        }
- 
-        boolean[] use = new boolean[101];
-        int put = 0;
-        int ans = 0;
-        for (int i = 0; i < K; i++) {
-            int temp = order[i];
- 
-            if (!use[temp]) { // 콘센트가 꽂혀있지 않은 경우
-                if (put < N) { // 콘센트를 꽂을 공간이 있는 경우
-                    use[temp] = true;
-                    put++;
-                } else { // 콘센트를 꽂을 공간이 없는 경우
-                    ArrayList<Integer> arrList = new ArrayList<>();
-                    for (int j = i; j < K; j++) { // 현재 꽂혀 있는 콘센트가 나중에도 사용되는지 확인.
-                        if (use[order[j]] && !arrList.contains(order[j])) {
-                            arrList.add(order[j]);
-                        }
-                    }
- 
-                    if (arrList.size() != N) { // 나중에도 사용되는 콘센트가 구멍의 개수보다 작을 경우.
-                        for (int j = 0; j < use.length; j++) {
-                            if (use[j] && !arrList.contains(j)) { // 그 콘센트를 제거.
-                                use[j] = false;
-                                break;
-                            }
-                        }
-                    } else { // 현재 꽂혀 있는 모든 콘센트가 나중에도 사용될 경우
-                        int remove = arrList.get(arrList.size() - 1); // 가장 마지막에 사용될 콘센트를 제거.
-                        use[remove] = false;
-                    }
- 
-                    use[temp] = true;
-                    ans++;
-                }
-            }
-        }
- 
-        bw.write(ans + "\n");
-        bw.flush();
-        bw.close();
-        br.close();
-    }
- 
+import java.util.*;
+import java.io.*;
+
+public class Main
+{
+    static int N, K;
+    static int[] arr;
+    static int[] visited;
+    static int result;
+    static List<Integer> list = new ArrayList<>();
+	public static void main(String[] args) throws Exception{
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		
+		N = Integer.parseInt(st.nextToken());
+		K = Integer.parseInt(st.nextToken());
+		
+		// K개 입력
+		arr = new int[104];
+		visited = new int[104];
+		st = new StringTokenizer(br.readLine());
+		for(int i = 0; i < K; i++) {
+		    arr[i] = Integer.parseInt(st.nextToken());
+
+
+		}
+		
+		for(int i = 0; i < K; i++) {
+		    
+		    if(visited[arr[i]] == 0) {
+		        // 다 차지 않았다면
+		        if(list.size() == N) {
+		            // 현재 컨센트에 있는 것들 중에 가장 마지막에 있는 것을 제거
+		            int last_idx = 0;
+		            int last = 0;
+		            for(int v: list) {
+                        int tmp_idx = 100000;
+		                for(int j = i+1; j <K; j++) {
+		                    if(v == arr[j]) {
+		                        tmp_idx = j; // 찾았으면 갱신
+		                        break;
+		                    }
+		                }
+		                if(last_idx < tmp_idx) {
+		                    last = v;
+		                    last_idx = tmp_idx;
+		                }
+		            }
+		            
+		            // 그리고 제거
+		            list.remove(Integer.valueOf(last));
+		            visited[last] = 0;
+		            result++;
+		            
+		        }
+		        list.add(arr[i]);
+		        visited[arr[i]] = 1;
+		    }
+		}
+
+				
+
+
+		System.out.println(result);
+
+	}
 }
