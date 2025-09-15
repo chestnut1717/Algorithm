@@ -1,12 +1,11 @@
-
 import java.util.*;
 import java.io.*;
 
 public class Main {
     static int N, K;
-    static int[] arr = new int[100001];
-    static int result = -1, count = 0;
-    static Queue<Pair> q = new ArrayDeque<>();
+    static int[] result = new int[100001]; // 최단 거리 저장
+    static int[] count = new int[100001];  // 경로 수 저장
+    static Queue<Integer> q = new ArrayDeque<>();
 
     public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -14,45 +13,34 @@ public class Main {
         N = Integer.parseInt(st.nextToken());
         K = Integer.parseInt(st.nextToken());
 
-        Arrays.fill(arr, -1);
-        q.offer(new Pair(N, 0));
-        arr[N] = 0;
+        q.offer(N);
+        result[N] = 1;
+        count[N] = 1; 
 
         bfs();
 
-        System.out.println(result);
-        System.out.println(count);
+        System.out.println(result[K]-1); // 최단 거리
+        System.out.println(count[K]);  // 최단 경로 수
     }
 
     static void bfs() {
-        while (!q.isEmpty()) {
-            Pair pair = q.poll();
-            int now = pair.now;
-            int dist = pair.dist;
-
-            // 목표 지점 도착 시
-            if (now == K) {
-                result = dist;
-                count++;
-            }
-
-            int[] moves = {now - 1, now + 1, now * 2};
-            for (int next : moves) {
-                if (next < 0 || next > 100000) continue;
-                if (arr[next] == -1 || arr[next] == dist + 1) {
-                    arr[next] = dist + 1;
-                    q.offer(new Pair(next, dist + 1));
+        while(!q.isEmpty()) {
+            int now = q.poll();
+            int[] moves = {now+1, now-1, now*2};
+            
+            for(int next: moves) {
+                if(next < 0 || next > 100000) continue;
+                // 만약 처음 방문이라면 result 채우고 q에 넣기
+                if(result[next] == 0) {
+                    result[next] = result[now] + 1;
+                    count[next] = count[now];
+                    q.offer(next);
+                }
+                // 방문했다면 count로 지금까지 몇 개인지 채움
+                else if (result[next] == result[now] + 1){
+                    count[next] += count[now];
                 }
             }
         }
     }
 }
-
-class Pair {
-    int now, dist;
-    public Pair(int now, int dist) {
-        this.now = now;
-        this.dist = dist;
-    }
-}
-
