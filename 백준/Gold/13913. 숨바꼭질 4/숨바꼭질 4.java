@@ -4,7 +4,7 @@ import java.io.*;
 public class Main
 {
     static int N, K;
-    static Pair[] result = new Pair[100004];
+    static int[] prev = new int[100004];
     static int[] visited = new int[100004];
     static Queue<Integer> q = new LinkedList<>();
     static Stack<Integer> stk = new Stack<>();
@@ -18,19 +18,19 @@ public class Main
         
         
         visited[N] = 1;
-		result[N] = new Pair(1, -1);
+		prev[N] = -1;
 		q.offer(N);
 		
 		bfs();
 		
-		System.out.println(result[K].dist - 1);
+		System.out.println(visited[K]-1);
     
     	// 아래는 경로출력
 	    int pivot = K;
         
 		while(pivot != -1) {
 		    stk.push(pivot);
-		    pivot = result[pivot].prev;
+		    pivot = prev[pivot];
 		    
 		}
 		
@@ -47,8 +47,6 @@ public class Main
 	    
 	    while(!q.isEmpty()) {
 	        int now = q.poll();
-	        int nowDist = result[now].dist;
-	        int prev = result[now].prev;
 	        
 	        int[] moves = {now+1, now-1, now*2};
 	        
@@ -56,24 +54,15 @@ public class Main
 	            if(next < 0 || next > 100000) continue;
 	            
 	            if(visited[next] == 0) {
-	                visited[next] = 1;
-	                result[next] = new Pair(nowDist+1, now);
+	                visited[next] = visited[now] + 1;
+	                prev[next] = now;
 	                q.offer(next);
+	                
 	                
 	                if(next == K) return;
 	               
 	            }
-	            
 	        }
 	    }
 	}
-}
-
-class Pair{
-    int dist;
-    int prev;
-    public Pair(int dist, int prev) {
-        this.dist = dist;
-        this.prev = prev;
-    }
 }
