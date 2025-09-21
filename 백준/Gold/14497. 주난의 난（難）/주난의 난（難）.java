@@ -9,7 +9,7 @@ public class Main
     static int[][] visited = new int[304][304];
     static int[] dy = {1, 0, -1, 0};
     static int[] dx = {0, 1, 0, -1};
-    static Queue<Integer> q = new LinkedList<>(); // 전역 q
+    static ArrayDeque<Integer> dq = new ArrayDeque<>(); // 전역 q
 
     public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -32,35 +32,39 @@ public class Main
         }
         
         // 초기 출발 값 집어넣기
-        q.offer(1000 * y1 + x1);
+        dq.offerFirst(1000 * y1 + x1);
         visited[y1][x1] = 1;
         int cnt = 0;
-        while(arr[y2][x2] != '0') {
-            cnt++;
-            Queue<Integer> temp = new LinkedList<>();
-            while(!q.isEmpty()) {
-                int pos = q.poll();
-                int y = pos / 1000;
-                int x = pos % 1000;
+        
+        // 0-1 BFS
+        while(!dq.isEmpty()) {
+            int pos = dq.pollFirst();
+            int y = pos / 1000;
+            int x = pos % 1000;
+            
+            
+            if (y == y2 && x == x2) {
+                break;
+            }
+            
+            for(int i = 0; i < 4; i++) {
+                int ny = y + dy[i];
+                int nx = x + dx[i];
+                if(!checkBound(ny, nx) || visited[ny][nx] != 0) continue;
                 
-                for(int i = 0; i < 4; i++) {
-                    int ny = y + dy[i];
-                    int nx = x + dx[i];
-                    if(!checkBound(ny, nx) || visited[ny][nx] != 0) continue;
-                    visited[ny][nx] = cnt;
-                    if(arr[ny][nx] != '0') {
-                        arr[ny][nx] = '0';
-                        temp.offer(ny*1000 + nx);
-                    } else {
-                        q.offer(ny*1000 + nx);
-                    }
+                if(arr[ny][nx] != '0') {
+                    arr[ny][nx] = '0';
+                    visited[ny][nx] = visited[y][x]+1;
+                    dq.offerLast(ny*1000 + nx);
+                } else {
+                    visited[ny][nx] = visited[y][x];
+                    dq.offerFirst(ny*1000 + nx);
                 }
             }
-            q = temp;
-            
         }
+
         
-        System.out.print(visited[y2][x2]);
+        System.out.print(visited[y2][x2] - 1);
         
     }
 
